@@ -2,7 +2,8 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 public enum Block {
     WALL('#'),
-    EMPTY(' ');
+    EMPTY(' '),
+    PATH('*');
     private final char symbol;
     Block(char symbol) { this.symbol = symbol; }
     @Override
