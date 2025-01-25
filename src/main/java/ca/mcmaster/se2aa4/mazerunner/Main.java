@@ -1,6 +1,5 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
@@ -19,35 +18,45 @@ public class Main {
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
-        BufferedReader reader = null;
         
         try {
             CommandLine cmd = parser.parse(options, args);
 
-            if (cmd.hasOption("i")) {
-                logger.trace("**** Reading the maze from file " + cmd.getOptionValue("i"));
-                File file = new File(cmd.getOptionValue("i"));
-                reader = new BufferedReader(new FileReader(file));
-            } else {
-                formatter.printHelp("Maze Runner", options);
+            // Check if the -i flag is provided
+            if (!cmd.hasOption("i")) {
+                formatter.printHelp("MazeRunner", options);
                 return;
             }
-            String line;
-            while ((line = reader.readLine()) != null) {
-                for (int idx = 0; idx < line.length(); idx++) {
-                    if (line.charAt(idx) == '#') {
-                        logger.trace("WALL ");
-                    } else if (line.charAt(idx) == ' ') {
-                        logger.trace("PASS ");
-                    }
-                }
-                logger.info(System.lineSeparator());
+
+            String filePath = cmd.getOptionValue("i");
+            logger.trace("Reading maze from file: " + filePath);
+            
+            File mazeFile = new File(filePath);
+            if (!mazeFile.exists()) {
+                logger.error("Error: Maze file not found.");
+                return;
             }
+
+             // Create and load the maze
+             Maze maze = new Maze(mazeFile);
+             maze.printMaze();
+ 
+             // Solve the maze using the Right-Hand Rule
+             MazeSolver solver = new MazeSolver(maze);
+             solver.solve();
+
+             // Print the solved maze
+             logger.info("Solved maze: ");
+             logger.info(System.lineSeparator());
+             maze.printMaze();
+ 
+             logger.info("** End of MazeRunner");
+
+        } catch (ParseException e) {
+            logger.error("Error parsing command line arguments.");
+            formatter.printHelp("MazeRunner", options);
         } catch(Exception e) {
-            logger.error("/!\\ An error has occured /!\\");
+            logger.error("/!\\ An error has occured /!\\", e);
         }
-        logger.trace("**** Computing path");
-        logger.info("PATH NOT COMPUTED");
-        logger.info("** End of MazeRunner");
     }
 }

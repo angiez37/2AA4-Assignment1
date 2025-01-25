@@ -22,32 +22,35 @@ public class Maze {
     private void loadMaze(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            rows = 0;
+            java.util.List<String> lines = new java.util.ArrayList<>();
+    
             while ((line = reader.readLine()) != null) {
-                cols = line.length();
-                rows++;
+                if (line.isEmpty()) continue;  // Skip empty lines
+                lines.add(line);
+            }
+    
+            rows = lines.size();
+            cols = (rows > 0) ? lines.get(0).length() : 0;
+    
+            if (rows == 0 || cols == 0) {
+                System.err.println("Error: Maze file is empty or invalid.");
+                System.exit(1);
+            }
+    
+            grid = new Block[rows][cols];
+            System.out.println("Maze initialized with size: " + rows + " x " + cols);
+    
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < cols; col++) {
+                    grid[row][col] = (lines.get(row).charAt(col) == '#') ? Block.WALL : Block.EMPTY;
+                }
             }
         } catch (IOException e) {
             System.err.println("Error reading maze file.");
             System.exit(1);
         }
-
-        grid = new Block[rows][cols];
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            int row = 0;
-            while ((line = reader.readLine()) != null) {
-                for (int col = 0; col < cols; col++) {
-                    grid[row][col] = (line.charAt(col) == '#') ? Block.WALL : Block.EMPTY;
-                }
-                row++;
-            }
-        } catch (IOException e) {
-            System.err.println("Error loading maze data.");
-            System.exit(1);
-        }
     }
+
     public int[] findEntryPoint() {
         for (int row = 1; row < rows - 1; row++) {
             if (grid[row][0] == Block.EMPTY) return new int[]{row, 0};  // Left border entry

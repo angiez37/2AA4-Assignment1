@@ -15,14 +15,15 @@ public class MazeSolver {
     }
 
     public void solve() {
-        while (col < maze.getCols() - 1 && grid[row][col] != Block.WALL) {
+
+        while (col < maze.getCols() && maze.grid[row][col] != Block.WALL) {
             moveForward();
         }
     }
 
     private void moveForward() {
-        if (grid[row][col] != Block.WALL) {
-            grid[row][col] = Block.PATH; // Mark the path
+        if (maze.grid[row][col] != Block.WALL) {
+            maze.grid[row][col] = Block.PATH; // Mark the path
             col++; // Move right in a straight maze
         }
     }
