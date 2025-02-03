@@ -4,7 +4,9 @@ public enum Block {
     WALL('#'),
     EMPTY(' '),
     PATH('*');
+
     private final char symbol;
+    
     Block(char symbol) { this.symbol = symbol; }
     @Override
     public String toString() { return "" + symbol; }
