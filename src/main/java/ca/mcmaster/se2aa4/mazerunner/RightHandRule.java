@@ -36,24 +36,19 @@ public class RightHandRule {
             right_wall = rightCheck(direction);
             // If yes
             if (right_wall) {
-                System.out.println("Right wall identified");
                 // Is there a wall in front?
                 front_wall = frontCheck(direction);
                 // If yes
                 if (front_wall) {
-                    System.out.println("Front wall identified");
                     // Turn left
                     direction = turnLeft(direction);
-                    System.out.println("Left turn activated");
                     path += "L ";
                 } else {
                     // Else move forward
-                    System.out.println("No front wall so we move forward");
                     moveForward(direction);
                     path += "F ";
                 }
             } else {
-                System.out.println("No right wall so we move forward");
                 // Turn right and move forward
                 direction = turnRight(direction);
                 moveForward(direction);
@@ -62,6 +57,72 @@ public class RightHandRule {
         }
 
         return path;
+    }
+
+    public boolean checkPath(String path) {
+        String user_path = PathConverter.Canonical(path); // First convert path to Canonical form
+        int []currentPos = new int[] {row, col};
+        int []finalPos = exit;
+        int[] end = {currentPos[0], currentPos[1]}; 
+        boolean frontWall = false;
+        boolean[] pathResults = new boolean[2]; // Holds the result [[path valid from right-left?],[path valid from left-right]]
+        
+        // Test the path from left-right, then right-left
+        for (int i = 0; i < 2; i++) {
+            // Determine initial positions and directions
+            Direction direction = (i == 0) ? Direction.EAST : Direction.WEST;
+            currentPos = (i == 0) ? currentPos: finalPos;
+            finalPos = (i == 0) ? finalPos: end;
+            boolean invalid = false; // whether an invalid instruction was encountered in path
+            
+            // Go through path instructions and apply them
+            for (int j = 0; j < user_path.length(); j++) {    
+                try {
+                    switch (user_path.charAt(j)) {
+                        case 'F':
+                            frontWall = frontCheck(direction);
+                            if (frontWall) {
+                                // If a wall is present, path is immediately invalid
+                                throw new Exception();
+                            } else {
+                                moveForward(direction);
+                                currentPos[0] = row; // Ensure current position is updated correctly
+                                currentPos[1] = col;
+                            }
+                            break;
+                        case 'R':
+                            direction = turnRight(direction);
+                            break;
+                        case 'L':
+                            direction = turnLeft(direction);
+                            break;
+                        default:
+                            // When an incorrect instruction is provided
+                            System.out.println("Usage: Path must include only L, R, and F. Factorized form of this is also acceptable.");
+                            System.exit(1);
+                    }
+                } catch (Exception e) {
+                    invalid = true;
+                    pathResults[i] = false; // Path from left-right or right-left is invalid
+                    break;
+                }
+            }
+            
+            // Path is correct if we ended up in the final position and didn't encounter an invalid instruction
+            if (Arrays.equals(currentPos, finalPos) && !invalid) {
+                pathResults[i] = true;
+            } else {
+                pathResults[i] = false;
+            }
+        }
+        
+        // Path is valid if either left-right or right-left is valid
+        if (pathResults[0] || pathResults[1]) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private void moveForward( Direction direction) { 
@@ -81,7 +142,6 @@ public class RightHandRule {
             default:
                 break;
         }
-        System.out.println("Moving to: (" + row + ", " + col + ")");
     }
 
     private Direction turnRight(Direction direction) {

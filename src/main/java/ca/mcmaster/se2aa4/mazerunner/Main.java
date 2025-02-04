@@ -29,12 +29,7 @@ public class Main {
                 return;
             }
 
-            if (!cmd.hasOption("p")) {
-                
-            }
-
             String filePath = cmd.getOptionValue("i");
-            String validPath = cmd.getOptionValue("p");
             logger.trace("Reading maze from file: " + filePath);
             
             File mazeFile = new File(filePath);
@@ -47,19 +42,34 @@ public class Main {
              Maze maze = new Maze(mazeFile);
              maze.printMaze();
  
-             // Solve the maze using the Right-Hand Rule
-             RightHandRule solver = new RightHandRule(maze);
-             String path = solver.solve();
+             // If -p is provided, validate the given path instead of solving
+            if (cmd.hasOption("p")) {
+                String userPath = cmd.getOptionValue("p");
+                logger.info("Validating user-provided path: " + userPath);
 
-             // Print the solved maze
-             logger.info("Solved maze: ");
-             logger.info(System.lineSeparator());
-             maze.printMaze();
+                RightHandRule solver = new RightHandRule(maze);
+                boolean isValid = solver.checkPath(userPath);
 
-             // Print the path
-             logger.info("Path: " + path);
- 
-             logger.info("** End of MazeRunner");
+                if (isValid) {
+                    logger.info("The provided path is VALID for the maze.");
+                } else {
+                    logger.error("The provided path is INVALID for the maze.");
+                }
+            } else {
+                // Solve the maze using the Right-Hand Rule
+                RightHandRule solver = new RightHandRule(maze);
+                String path = solver.solve();
+
+                // Print the solved maze
+                logger.info("Solved maze: ");
+                logger.info(System.lineSeparator());
+                maze.printMaze();
+
+                // Print the path
+                logger.info("Generated Path: " + path);
+            }
+
+            logger.info("** End of MazeRunner");
 
         } catch (ParseException e) {
             logger.error("Error parsing command line arguments.");

@@ -47,17 +47,15 @@ public class Maze {
         }
     }
 
-    public int[] findEntryPoint() {
+    public int[] findEntryPoint() { //assuming we enter from the left
         for (int row = 1; row < rows - 1; row++) {
             if (grid[row][0] == Block.EMPTY) return new int[]{row, 0};  // Left border entry
-            //if (grid[row][cols - 1] == Block.EMPTY) return new int[]{row, cols - 1}; // Right border entry
         }
         return null;
     }
 
-    public int[] findExitPoint() {
+    public int[] findExitPoint() { //assuming we exit from the right
         for (int row = 1; row < rows - 1; row++) {
-            //if (grid[row][0] == Block.EMPTY) return new int[]{row, 0}; // Left border exit
             if (grid[row][cols - 1] == Block.EMPTY) return new int[]{row, cols - 1}; // Right border exit
         }
         return null;
