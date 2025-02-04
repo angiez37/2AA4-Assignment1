@@ -15,6 +15,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("i", true, "Path to the maze file");
+        options.addOption("p", true, "Path to be validated");
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -28,7 +29,12 @@ public class Main {
                 return;
             }
 
+            if (!cmd.hasOption("p")) {
+                
+            }
+
             String filePath = cmd.getOptionValue("i");
+            String validPath = cmd.getOptionValue("p");
             logger.trace("Reading maze from file: " + filePath);
             
             File mazeFile = new File(filePath);
@@ -42,13 +48,16 @@ public class Main {
              maze.printMaze();
  
              // Solve the maze using the Right-Hand Rule
-             MazeSolver solver = new MazeSolver(maze);
-             solver.solve();
+             RightHandRule solver = new RightHandRule(maze);
+             String path = solver.solve();
 
              // Print the solved maze
              logger.info("Solved maze: ");
              logger.info(System.lineSeparator());
              maze.printMaze();
+
+             // Print the path
+             logger.info("Path: " + path);
  
              logger.info("** End of MazeRunner");
 

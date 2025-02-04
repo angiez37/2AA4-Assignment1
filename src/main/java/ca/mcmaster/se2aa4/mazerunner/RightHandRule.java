@@ -1,11 +1,13 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
+import java.util.Arrays;
+
 public class RightHandRule {
     private final Maze maze;
     private Block[][] grid;
     private int row, col;
-    private final int[] entry = maze.findEntryPoint();
-    private final int[] exit = maze.findExitPoint();
+    private int[] entry;
+    private int[] exit;
     
 
     public RightHandRule(Maze maze) {
@@ -16,15 +18,15 @@ public class RightHandRule {
             this.row = entry[0];
             this.col = entry[1];
         }
-        Direction dir = Direction.WEST; // Start from EAST facing WEST
+        Direction direction = Direction.EAST; // Start from EAST facing WEST
         boolean right_wall = false;
         boolean front_wall = false;
         String path = "";
     }
 
-    public void solve() {
+    public String solve() {
 
-        Direction direction = Direction.WEST; // Start from EAST facing WEST
+        Direction direction = Direction.EAST; // Start from EAST facing WEST
         boolean right_wall = false;
         boolean front_wall = false;
         String path = "";
@@ -34,40 +36,52 @@ public class RightHandRule {
             right_wall = rightCheck(direction);
             // If yes
             if (right_wall) {
+                System.out.println("Right wall identified");
                 // Is there a wall in front?
                 front_wall = frontCheck(direction);
                 // If yes
                 if (front_wall) {
+                    System.out.println("Front wall identified");
                     // Turn left
                     direction = turnLeft(direction);
+                    System.out.println("Left turn activated");
                     path += "L ";
                 } else {
                     // Else move forward
+                    System.out.println("No front wall so we move forward");
                     moveForward(direction);
                     path += "F ";
                 }
             } else {
+                System.out.println("No right wall so we move forward");
                 // Turn right and move forward
                 direction = turnRight(direction);
                 moveForward(direction);
                 path += "R " + "F ";
             }
         }
+
+        return path;
     }
 
     private void moveForward( Direction direction) { 
         switch (direction) {
             case Direction.WEST:
                 col -= 1;
+                break;
             case Direction.EAST:
                 col += 1;
+                break;
             case Direction.NORTH:
                 row -= 1;
+                break;
             case Direction.SOUTH:
                 row += 1;
+                break;
             default:
                 break;
         }
+        System.out.println("Moving to: (" + row + ", " + col + ")");
     }
 
     private Direction turnRight(Direction direction) {
@@ -104,29 +118,13 @@ public class RightHandRule {
     private boolean rightCheck(Direction direction) {
         switch (direction) {
             case Direction.WEST:
-                if (maze.grid[row - 1][col] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return row > 0 && row - 1 >= 0 && maze.grid[row - 1][col] == Block.WALL;
             case Direction.EAST:
-                if (maze.grid[row + 1][col] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return row < maze.grid.length - 1 && row + 1 < maze.grid.length && maze.grid[row + 1][col] == Block.WALL;
             case Direction.NORTH:
-                if (maze.grid[row][col + 1] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return col < maze.grid[0].length - 1 && col + 1 < maze.grid[0].length && maze.grid[row][col + 1] == Block.WALL;
             case Direction.SOUTH:
-                if (maze.grid[row][col - 1] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return col > 0 && col - 1 >= 0&& maze.grid[row][col - 1] == Block.WALL;
             default:
                 return false;
         }
@@ -135,29 +133,13 @@ public class RightHandRule {
     private boolean frontCheck(Direction direction) {
         switch (direction) {
             case Direction.WEST:
-                if (maze.grid[row][col - 1] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return col > 0 && maze.grid[row][col - 1] == Block.WALL;
             case Direction.EAST:
-                if (maze.grid[row][col + 1] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return col < maze.grid[0].length - 1 && maze.grid[row][col + 1] == Block.WALL;
             case Direction.NORTH:
-                if (maze.grid[row - 1][col] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return row > 0 && maze.grid[row - 1][col] == Block.WALL;
             case Direction.SOUTH:
-                if (maze.grid[row + 1][col] == Tile.WALL) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return row < maze.grid.length - 1 && maze.grid[row + 1][col] == Block.WALL;
             default:
                 return false;
         } 

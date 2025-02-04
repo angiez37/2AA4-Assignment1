@@ -7,10 +7,10 @@ public enum Direction {
     EAST('E'),
     WEST('W');
 
-    private final char dir;
+    private final char direction;
 
     Direction(char direction) { this.direction = direction; }
 
     @Override
-    public String toString() { return dir + ""; }
+    public String toString() { return direction + ""; }
 }
