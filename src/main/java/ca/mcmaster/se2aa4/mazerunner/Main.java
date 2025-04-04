@@ -15,6 +15,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("i", true, "Path to the maze file");
+        options.addOption("s", true, "Solver to be used");
         options.addOption("p", true, "Path to be validated");
 
         CommandLineParser parser = new DefaultParser();
@@ -38,16 +39,35 @@ public class Main {
                 return;
             }
 
-             // Create and load the maze
-             Maze maze = new Maze(mazeFile);
-             maze.printMaze();
+            // Create and load the maze
+            Maze maze = new Maze(mazeFile);
+            MazeSolver solver;
+            //maze.printMaze();
+
+            // Check if the -s flag is provided
+            if (cmd.hasOption("s")) {
+                String solverName = cmd.getOptionValue("s");
+                logger.info("Using solver: " + solverName);
+                if (solverName.equals("RightHandRule")) {
+                    solver = new RightHandRule(maze);
+                } else if (solverName.equals("DepthFirstSearch")) {
+                    solver = new DepthFirstSearch(maze);
+                } else {
+                    logger.error("Error: Invalid solver name.");
+                    return;
+                }
+            } else {
+                logger.info("Using default solver: RightHandRule");
+                solver = new RightHandRule(maze);
+            }
+
+            SolverSelect solverSelect = new SolverSelect(solver);
  
              // If -p is provided, validate the given path instead of solving
             if (cmd.hasOption("p")) {
                 String userPath = cmd.getOptionValue("p");
                 logger.info("Validating user-provided path: " + userPath);
 
-                RightHandRule solver = new RightHandRule(maze);
                 boolean isValid = solver.checkPath(userPath);
 
                 if (isValid) {
@@ -56,8 +76,7 @@ public class Main {
                     logger.error("The provided path is INVALID for the maze.");
                 }
             } else {
-                // Solve the maze using the Right-Hand Rule
-                RightHandRule solver = new RightHandRule(maze);
+                // Solve the maze using the selected solver
                 String path = solver.solve();
 
                 // Print the solved maze
