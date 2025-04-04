@@ -1,5 +1,5 @@
-package ca.mcmaster.se2aa4.mazerunner;
-import ca.mcmaster.se2aa4.mazerunner.MazeSolver;
+package ca.mcmaster.se2aa4.mazerunner.algorithms;
+import ca.mcmaster.se2aa4.mazerunner.algorithms.MazeSolver;
 
 /*
  * Context class to select different solving algorithms (strategies) at runtime

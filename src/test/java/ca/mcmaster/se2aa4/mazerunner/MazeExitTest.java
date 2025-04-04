@@ -1,6 +1,5 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import java.beans.Transient;
 import java.io.File;
 import ca.mcmaster.se2aa4.mazerunner.Maze;
 

@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import ca.mcmaster.se2aa4.mazerunner.commands.*;
+import ca.mcmaster.se2aa4.mazerunner.algorithms.*;
+
 import org.apache.commons.cli.*;
 
 public class Main {
@@ -42,7 +46,7 @@ public class Main {
             // Create and load the maze
             Maze maze = new Maze(mazeFile);
             MazeSolver solver;
-            //maze.printMaze();
+            MazeInvoker invoker = new MazeInvoker();
 
             // Check if the -s flag is provided
             if (cmd.hasOption("s")) {
@@ -68,26 +72,17 @@ public class Main {
                 String userPath = cmd.getOptionValue("p");
                 logger.info("Validating user-provided path: " + userPath);
 
-                boolean isValid = solver.checkPath(userPath);
+                MazeCommand command = new ValidatePathCommand(solverSelect, userPath);
+                invoker.setCommand(command);
+                invoker.executeCommand();
 
-                if (isValid) {
-                    logger.info("The provided path is VALID for the maze.");
-                } else {
-                    logger.error("The provided path is INVALID for the maze.");
-                }
             } else {
-                // Solve the maze using the selected solver
-                String path = solver.solve();
+                MazeCommand command = new SolveCommand(solverSelect);
+                invoker.setCommand(command);
+                invoker.executeCommand();
 
-                // Print the solved maze
-                logger.info("Solved maze: ");
-                logger.info(System.lineSeparator());
-                maze.printMaze();
 
-                // Print the path
-                logger.info("Generated Path: " + path);
             }
-
             logger.info("** End of MazeRunner");
 
         } catch (ParseException e) {

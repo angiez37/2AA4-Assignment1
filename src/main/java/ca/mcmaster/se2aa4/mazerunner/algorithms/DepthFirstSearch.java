@@ -1,9 +1,9 @@
-package ca.mcmaster.se2aa4.mazerunner;
+package ca.mcmaster.se2aa4.mazerunner.algorithms;
 
 import ca.mcmaster.se2aa4.mazerunner.Block;
 import ca.mcmaster.se2aa4.mazerunner.Direction;
 import ca.mcmaster.se2aa4.mazerunner.Maze;
-import ca.mcmaster.se2aa4.mazerunner.MazeSolver;
+import ca.mcmaster.se2aa4.mazerunner.algorithms.MazeSolver;
 import ca.mcmaster.se2aa4.mazerunner.PathConverter;
 
 import java.util.Arrays;
