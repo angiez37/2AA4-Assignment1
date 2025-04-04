@@ -34,7 +34,7 @@ public class Maze {
             }
     
             grid = new Block[rows][cols];
-            System.out.println("Maze initialized with size: " + rows + " x " + cols);
+            //System.out.println("Maze initialized with size: " + rows + " x " + cols);
     
             for (int row = 0; row < rows; row++) {
                 for (int col = 0; col < cols; col++) {
