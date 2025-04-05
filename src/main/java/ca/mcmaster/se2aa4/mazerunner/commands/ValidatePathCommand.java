@@ -13,6 +13,6 @@ public class ValidatePathCommand implements MazeCommand {
     
     public void execute() {
         boolean isValid = solver.checkPath(path);
-        System.out.println("The provided path is " + (isValid ? "valid" : "invalid") + " for the maze.");
+        System.out.println("The provided path is " + (isValid ? "VALID" : "INVALID") + " for the maze.");
     }
 }

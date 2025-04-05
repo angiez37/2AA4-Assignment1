@@ -2,21 +2,20 @@ package ca.mcmaster.se2aa4.mazerunner.algorithms;
 
 import ca.mcmaster.se2aa4.mazerunner.Block;
 import ca.mcmaster.se2aa4.mazerunner.Direction;
+import ca.mcmaster.se2aa4.mazerunner.Moves;
 import ca.mcmaster.se2aa4.mazerunner.Maze;
 import ca.mcmaster.se2aa4.mazerunner.algorithms.MazeSolver;
 import ca.mcmaster.se2aa4.mazerunner.PathConverter;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class DepthFirstSearch implements MazeSolver {
     private final Maze maze;
     private int[] entry;
     private int[] exit;
     private boolean[][] visited;
-    private Stack<Direction> pathStack;
+    private List<Moves> pathDirections;
+    private Direction currentDirection;
     private Set<String> visitedPositions;
 
     public DepthFirstSearch(Maze maze) {
@@ -24,7 +23,8 @@ public class DepthFirstSearch implements MazeSolver {
         this.entry = maze.findEntryPoint();
         this.exit = maze.findExitPoint();
         this.visited = new boolean[maze.getRows()][maze.getCols()];
-        this.pathStack = new Stack<>();
+        this.pathDirections = new ArrayList<>();
+        this.currentDirection = Direction.EAST; // Initial facing direction
         this.visitedPositions = new HashSet<>();
     }
 
@@ -35,13 +35,13 @@ public class DepthFirstSearch implements MazeSolver {
         }
 
         // Start DFS from entry point
-        if (dfs(entry[0], entry[1])) {
-            return convertStackToPath();
+        if (dfs(entry[0], entry[1], currentDirection)) {
+            return convertPathToInstructions();
         }
         return "";
     }
 
-    private boolean dfs(int row, int col) {
+    private boolean dfs(int row, int col, Direction facing) {
         // Check if we've reached the exit
         if (row == exit[0] && col == exit[1]) {
             return true;
@@ -49,52 +49,72 @@ public class DepthFirstSearch implements MazeSolver {
 
         // Mark current position as visited
         visited[row][col] = true;
-        String positionKey = row + "," + col;
-        visitedPositions.add(positionKey);
 
-        // Try all possible directions
-        for (Direction dir : Direction.values()) {
-            int newRow = row;
-            int newCol = col;
+        // Try all possible directions relative to current facing
+        for (Moves turn : getPossibleTurns()) {
+            Direction newFacing = applyTurn(facing, turn);
+            int[] newPos = getNewPosition(row, col, newFacing);
 
-            // Calculate new position based on direction
-            switch (dir) {
-                case NORTH -> newRow--;
-                case SOUTH -> newRow++;
-                case EAST -> newCol++;
-                case WEST -> newCol--;
-            }
-
-            // Check if new position is valid and not visited
-            if (isValidPosition(newRow, newCol) && !visited[newRow][newCol] && 
-                maze.grid[newRow][newCol] == Block.EMPTY) {
+            if (isValidPosition(newPos[0], newPos[1]) && 
+                !visited[newPos[0]][newPos[1]] && 
+                maze.grid[newPos[0]][newPos[1]] == Block.EMPTY) {
                 
-                pathStack.push(dir);
-                if (dfs(newRow, newCol)) {
+                // Record the turn and move
+                if (!turn.equals(Moves.FORWARD)) {
+                    pathDirections.add(turn);
+                }
+                pathDirections.add(Moves.FORWARD);
+                
+                if (dfs(newPos[0], newPos[1], newFacing)) {
                     return true;
                 }
-                pathStack.pop(); // Backtrack
+                
+                // Backtrack
+                pathDirections.remove(pathDirections.size() - 1);
+                if (!turn.equals(Moves.FORWARD)) {
+                    pathDirections.remove(pathDirections.size() - 1);
+                }
             }
         }
 
         return false;
     }
 
-    private boolean isValidPosition(int row, int col) {
-        return row >= 0 && row < maze.getRows() && col >= 0 && col < maze.getCols();
+    private List<Moves> getPossibleTurns() {
+        // Try forward first, then right, then left (preference order)
+        return Arrays.asList(Moves.FORWARD, Moves.RIGHT, Moves.LEFT);
     }
 
-    private String convertStackToPath() {
+    private Direction applyTurn(Direction current, Moves turn) {
+        if (turn.equals(Moves.FORWARD)) return current;
+        if (turn.equals(Moves.RIGHT)) return turnRight(current);
+        if (turn.equals(Moves.LEFT)) return turnLeft(current);
+        return current;
+    }
+
+    private int[] getNewPosition(int row, int col, Direction dir) {
+        return switch (dir) {
+            case NORTH -> new int[]{row - 1, col};
+            case SOUTH -> new int[]{row + 1, col};
+            case EAST -> new int[]{row, col + 1};
+            case WEST -> new int[]{row, col - 1};
+        };
+    }
+
+    private String convertPathToInstructions() {
         StringBuilder path = new StringBuilder();
-        for (Direction dir : pathStack) {
-            switch (dir) {
-                case NORTH -> path.append("F ");
-                case SOUTH -> path.append("F ");
-                case EAST -> path.append("F ");
-                case WEST -> path.append("F ");
+        for (Moves move : pathDirections) {
+            switch (move) {
+                case FORWARD -> path.append("F ");
+                case RIGHT -> path.append("R ");
+                case LEFT -> path.append("L ");
             }
         }
         return path.toString().trim();
+    }
+
+    private boolean isValidPosition(int row, int col) {
+        return row >= 0 && row < maze.getRows() && col >= 0 && col < maze.getCols();
     }
 
     @Override
