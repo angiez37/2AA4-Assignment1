@@ -1,9 +1,8 @@
-# Assignment A1 - Maze Runner
+# Maze Runner
 
 - Original author: Dr. [Sébastien Mosser](https://mosser.github.io)
-- Version: 2024.01
-- Context: McMaster University > Engineering > Computing & Software > SFWRENG > 2AA4
-- License: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+- Student: [Angel Saka](https://angiez37.github.io)
+- Course: SFWRENG 2AA4 [Software Design I - Introduction to Software Development]
 
 ## Business Logic Specification
 
@@ -31,7 +30,7 @@ This program explores a maze, finding a path from an entry point to an exit one.
 To build the program, simply package it with Maven:
 
 ```
-mosser@azrael A1-Template % mvn -q clean package 
+angel@saka A1-Template % mvn -q clean package 
 ```
 
 ### Provided version (starter code)
@@ -39,7 +38,7 @@ mosser@azrael A1-Template % mvn -q clean package
 The starter code assumes the maze file name is the first argument. 
 
 ```
-mosser@azrael A1-Template % java -jar target/mazerunner.jar ./examples/small.maz.txt
+angel@saka A1-Template % java -jar target/mazerunner.jar ./examples/small.maz.txt
 ** Starting Maze Runner
 **** Reading the maze from file ./examples/small.maz.txt
 WALL WALL WALL WALL WALL WALL WALL WALL WALL WALL WALL 
@@ -61,7 +60,7 @@ PATH NOT COMPUTED
 When called on a non-existing file. it prints an error message
 
 ```
-mosser@azrael A1-Template % java -jar target/mazerunner.jar ./examples/small.maz.txtd
+angel@saka A1-Template % java -jar target/mazerunner.jar ./examples/small.maz.txtd
 ** Starting Maze Runner
 **** Reading the maze from file ./examples/small.maz.txtd
 /!\ An error has occured /!\
@@ -78,34 +77,44 @@ The delivered program at the end of this assignment should use the following fla
 
 - `-i MAZE_FILE`: specifies the filename to be used;
 - `-p PATH_SEQUENCE`: activates the path verification mode to validate that PATH_SEQUENCE is correct for the maze
-
-If you are also delivering the bonus, your program will react to a third flag:
-
-- `-method {tremaux, righthand}`: specifies which path computation method to use. (default is right hand)
+- `-s SOLVER`: specifies the algorithm to be used in solving the maze: Right Hand Rule or Depth First Search;
 
 #### Examples
 
 When no logs are activated, the programs only print the computed path on the standard output.
 
 ```
-mosser@azrael A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt
-4F
-mosser@azrael A1-Template %
+angel@saka A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt
+Generated path: 4F
+angel@saka A1-Template %
 ```
 
 If a given path is correct, the program prints the message `correct path` on the standard output.
 
 ```
-mosser@azrael A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 4F
+angel@saka A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 4F
 correct path
-mosser@azrael A1-Template %
+angel@saka A1-Template %
 ```
 
 If a given path is incorrect, the program prints the message `incorrect path` on the standard output.
 
 ```
-mosser@azrael A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 3F
+angel@saka A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 3F
 inccorrect path
-mosser@azrael A1-Template %
+angel@saka A1-Template %
+```
+
+```
+angel@saka A1-Template % java -jar target/mazerunner.jar -i examples/small.maz.txt -s DepthFirstSearch
+Generated path: F L F R F F L F F F F F F R F F F F R F F L F F R F F L F
+angel@saka A1-Template %
+```
+
+```
+angel@saka A1-Template % java -jar target/mazerunner.jar -i examples/small.maz.txt -s RightHandRule
+Generated path: F R F L L F F R F F R F F L L F F F F R F F R F F F F L L F F R F F F F R F F R F F L L F F L F F L F F F F R F F R
+F F L L F F F F R F F R F F L L F F R F F R F F F F R F F L F F R F F L F
+angel@saka A1-Template %
 ```
 
