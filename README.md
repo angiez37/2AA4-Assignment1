@@ -1,8 +1,14 @@
 # Maze Runner
 
-- Original author: Dr. [Sébastien Mosser](https://mosser.github.io)
 - Student: [Angel Saka](https://angiez37.github.io)
 - Course: SFWRENG 2AA4 [Software Design I - Introduction to Software Development]
+
+## Description
+Maze Runner is a Java-based maze exploration project built to navigate mazes by determining viable routes from starting points to exits using algorithms like Depth-First Search (DFS) and the Right-Hand Rule. The system is capable of interpreting maze layouts from text files, producing step-by-step movement guides, verifying user-provided paths, and evaluating the efficiency of different navigation strategies.
+
+The project followed the full Agile development cycle, embracing an iterative and incremental workflow that continuously delivered improvements over a two-month span. Starting with requirement analysis and ideation, the development of a minimum viable product (MVP) and refining the application, with continuous testing and adjustments leading up to the final deployment.
+
+Throughout development, key software engineering practices including SOLID and GRASP and foundational object-oriented programming techniques were applied. I ensured quality through unit testing, and maintained organization with GitHub Projects and consistent version control.
 
 ## Business Logic Specification
 
@@ -75,46 +81,48 @@ PATH NOT COMPUTED
 
 The delivered program at the end of this assignment should use the following flags:
 
-- `-i MAZE_FILE`: specifies the filename to be used;
+- `-i MAZE_FILE`: specifies the filename to be used
 - `-p PATH_SEQUENCE`: activates the path verification mode to validate that PATH_SEQUENCE is correct for the maze
-- `-s SOLVER`: specifies the algorithm to be used in solving the maze: Right Hand Rule or Depth First Search;
+- `-s SOLVER {RightHandRule or DepthFirstSearch}`: specifies the algorithm to be used in solving the maze
 
 #### Examples
 
 When no logs are activated, the programs only print the computed path on the standard output.
 
 ```
-angel@saka A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt
+angel@saka 2AA4-MazeRunner % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt
 Generated path: 4F
-angel@saka A1-Template %
+angel@saka 2AA4-MazeRunner %
 ```
 
 If a given path is correct, the program prints the message `correct path` on the standard output.
 
 ```
-angel@saka A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 4F
+angel@saka 2AA4-MazeRunner % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 4F
 correct path
-angel@saka A1-Template %
+angel@saka 2AA4-MazeRunner %
 ```
 
 If a given path is incorrect, the program prints the message `incorrect path` on the standard output.
 
 ```
-angel@saka A1-Template % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 3F
+angel@saka 2AA4-MazeRunner % java -jar target/mazerunner.jar -i ./examples/straight.maz.txt -p 3F
 inccorrect path
-angel@saka A1-Template %
+angel@saka 2AA4-MazeRunner %
 ```
 
+DFS algorithm vs Right Hand algorithm
+
 ```
-angel@saka A1-Template % java -jar target/mazerunner.jar -i examples/small.maz.txt -s DepthFirstSearch
+angel@saka 2AA4-MazeRunner % java -jar target/mazerunner.jar -i examples/small.maz.txt -s DepthFirstSearch
 Generated path: F L F R F F L F F F F F F R F F F F R F F L F F R F F L F
-angel@saka A1-Template %
+angel@saka 2AA4-MazeRunner %
 ```
 
 ```
-angel@saka A1-Template % java -jar target/mazerunner.jar -i examples/small.maz.txt -s RightHandRule
+angel@saka 2AA4-MazeRunner % java -jar target/mazerunner.jar -i examples/small.maz.txt -s RightHandRule
 Generated path: F R F L L F F R F F R F F L L F F F F R F F R F F F F L L F F R F F F F R F F R F F L L F F L F F L F F F F R F F R
 F F L L F F F F R F F R F F L L F F R F F R F F F F R F F L F F R F F L F
-angel@saka A1-Template %
+angel@saka 2AA4-MazeRunner %
 ```
 
