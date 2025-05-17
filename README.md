@@ -10,6 +10,9 @@ The project followed the full Agile development cycle, embracing an iterative an
 
 Throughout development, key software engineering practices including SOLID and GRASP and foundational object-oriented programming techniques were applied. I ensured quality through unit testing, and maintained organization with GitHub Projects and consistent version control.
 
+### Technologies
+- Java, Maven, Apache CLI, JUnit
+
 ## Business Logic Specification
 
 This program explores a maze, finding a path from an entry point to an exit one.
@@ -30,6 +33,7 @@ This program explores a maze, finding a path from an entry point to an exit one.
 - The program takes as input a maze and print the path on the standard output.
     - For this assignment, the path does not have to be the shortest one.
 - The program can take a path as input and verify if it's a legit one.
+
 
 ## How to run this software?
 
